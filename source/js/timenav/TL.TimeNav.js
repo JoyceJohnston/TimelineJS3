@@ -442,11 +442,13 @@ TL.TimeNav = TL.Class.extend({
 	/*	Navigation
 	================================================== */
 	goTo: function(n, fast, css_animation) {
+
 		var self = 	this,
 			_ease = this.options.ease,
 			_duration = this.options.duration,
 			_n = (n < 0) ? 0 : n;
 
+			
 		// Set Marker active state
 		this._resetMarkersActive();
 		if(n >= 0 && n < this._markers.length) {
@@ -509,6 +511,7 @@ TL.TimeNav = TL.Class.extend({
 		// Go to the clicked marker
 		this.goToId(e.unique_id);
 		this.fire("change", {unique_id: e.unique_id});
+
 	},
 
 	_onMouseScroll: function(e) {
@@ -662,7 +665,7 @@ TL.TimeNav = TL.Class.extend({
 		this._el.slider_background			= TL.Dom.create('div', 'tl-timenav-slider-background', this._el.slider);
 		this._el.marker_container_mask		= TL.Dom.create('div', 'tl-timenav-container-mask', this._el.slider);
 		this._el.marker_container			= TL.Dom.create('div', 'tl-timenav-container', this._el.marker_container_mask);
-		this._el.marker_item_container		= TL.Dom.create('div', 'tl-timenav-item-container', this._el.marker_container);
+		this._el.marker_item_container		= TL.Dom.create('ul', 'tl-timenav-item-container', this._el.marker_container);
 		this._el.timeaxis 					= TL.Dom.create('div', 'tl-timeaxis', this._el.slider);
 		this._el.timeaxis_background 		= TL.Dom.create('div', 'tl-timeaxis-background', this._el.container);
 

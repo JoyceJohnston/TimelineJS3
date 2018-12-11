@@ -128,11 +128,14 @@ TL.StorySlider = TL.Class.extend({
 	},
 
 	_createSlides: function(array) {
+
 		for (var i = 0; i < array.length; i++) {
+
 			if (array[i].unique_id == "") {
 				array[i].unique_id = TL.Util.unique_ID(6, "tl-slide");
 			}
             this._createSlide(array[i], false, -1);
+
 		}
 	},
 
@@ -184,6 +187,7 @@ TL.StorySlider = TL.Class.extend({
 	/*	Navigation
 	================================================== */
 	goTo: function(n, fast, displayupdate) {
+
 		n = parseInt(n);
 		if (isNaN(n)) n = 0;
 
@@ -211,7 +215,7 @@ TL.StorySlider = TL.Class.extend({
 			if (this._swipable) {
 				this._swipable.stopMomentum();
 			}
-
+			
 			if (fast) {
 				this._el.slider_container.style.left = -(this.slide_spacing * n) + "px";
 				this._onSlideChange(displayupdate);
@@ -223,6 +227,7 @@ TL.StorySlider = TL.Class.extend({
 					complete: 	this._onSlideChange(displayupdate)
 				});
 			}
+
 
 			// Set Slide Active State
 			this._slides[n].setActive(true);
@@ -409,8 +414,7 @@ TL.StorySlider = TL.Class.extend({
 		this._el.slider_container_mask		= TL.Dom.create('div', 'tl-slider-container-mask', this._el.container);
 		this._el.background 				= TL.Dom.create('div', 'tl-slider-background tl-animate', this._el.container);
 		this._el.slider_container			= TL.Dom.create('div', 'tl-slider-container tlanimate', this._el.slider_container_mask);
-		this._el.slider_item_container		= TL.Dom.create('div', 'tl-slider-item-container', this._el.slider_container);
-
+		this._el.slider_item_container		= TL.Dom.create('ul', 'tl-slider-item-container', this._el.slider_container);
 
 		// Update Size
 		this.options.width = this._el.container.offsetWidth;

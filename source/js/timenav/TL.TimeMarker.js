@@ -230,10 +230,11 @@ TL.TimeMarker = TL.Class.extend({
 	_initLayout: function () {
 		//trace(this.data)
 		// Create Layout
-		this._el.container 				= TL.Dom.create("div", "tl-timemarker");
+		this._el.container 				= TL.Dom.create("li", "tl-timemarker");
 		if (this.data.unique_id) {
 			this._el.container.id 		= this.data.unique_id + "-marker";
 		}
+
 
 		if (this.data.end_date) {
 			this.has_end_date = true;
@@ -242,7 +243,8 @@ TL.TimeMarker = TL.Class.extend({
 
 		this._el.timespan				= TL.Dom.create("div", "tl-timemarker-timespan", this._el.container);
 		this._el.timespan_content		= TL.Dom.create("div", "tl-timemarker-timespan-content", this._el.timespan);
-		this._el.content_container		= TL.Dom.create("div", "tl-timemarker-content-container", this._el.container);
+		this._el.content_container		= TL.Dom.create("button", "tl-timemarker-content-container", this._el.container);
+		this._el.content_container.setAttribute('tabindex', '0');
 
 		this._el.content				= TL.Dom.create("div", "tl-timemarker-content", this._el.content_container);
 
@@ -273,7 +275,7 @@ TL.TimeMarker = TL.Class.extend({
 
 		// Text
 		this._el.text					= TL.Dom.create("div", "tl-timemarker-text", this._el.content);
-		this._text						= TL.Dom.create("h2", "tl-headline", this._el.text);
+		this._text						= TL.Dom.create("span", "tl-headline", this._el.text);
 		if (this.data.text.headline && this.data.text.headline != "") {
 			this._text.innerHTML		= TL.Util.unlinkify(this.data.text.headline);
 		} else if (this.data.text.text && this.data.text.text != "") {

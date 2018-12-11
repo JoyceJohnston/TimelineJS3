@@ -16,7 +16,7 @@
 	.property-animation(height, @animation-duration-fast, @animation-ease);
 	.property-animation(width, @animation-duration, @animation-ease);
 	.animation-timing-cubic-bezier();
-	
+
 
 	&.tl-timeera-fast {
 		.property-animation(top, @animation-duration-fast, @animation-ease);
@@ -85,7 +85,7 @@
 		box-sizing: border-box;
 		border: 1px solid @marker-outline-color;
 		// box-shadow: 1px 1px 1px @color-background;
-				
+
 		.tl-timeera-content {
 			position:relative;
 			overflow:hidden;
@@ -93,24 +93,24 @@
 			// z-index:8;
 			padding:5px;
 			.border-box();
-			
+
 			.tl-timeera-text {
 				overflow:hidden;
 				position: relative;
-				
+
 				height:100%;
-				
-				h2.tl-headline {
+
+				.tl-headline {
 					bottom:0px;
 					position: absolute;
 					display: -webkit-box;
-					
+
 					line-clamp: 4;
 					-webkit-line-clamp: 4;
 					box-orient: vertical;
 					-webkit-box-orient: vertical;
 					text-overflow: ellipsis;
-					
+
 					font-size:10px;
 					line-height:10px;
 					// height:100%;
@@ -119,7 +119,7 @@
 					margin:0;
 					color:@color-background;
 					margin-left:10px;
-					
+
 					&.tl-headline-fadeout {
 						&:after {
 							content: "";
@@ -132,17 +132,17 @@
 							.marker-text-fade(@marker-color,50%);
 						}
 					}
-					
-				}
-				
-			}
-			
-		}
-		
 
-		
+				}
+
+			}
+
+		}
+
+
+
 	}
-	
+
 
 }
 

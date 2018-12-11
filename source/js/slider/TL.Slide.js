@@ -182,18 +182,22 @@ TL.Slide = TL.Class.extend({
 	================================================== */
 	_initLayout: function () {
 		// Create Layout
-		this._el.container 				= TL.Dom.create("div", "tl-slide");
+		this._el.container 				= TL.Dom.create("li", "tl-slide");
 
 		if (this.has.title) {
 			this._el.container.className = "tl-slide tl-slide-titleslide";
+
 		}
 
 		if (this.data.unique_id) {
 			this._el.container.id 		= this.data.unique_id;
 		}
 		this._el.scroll_container 		= TL.Dom.create("div", "tl-slide-scrollable-container", this._el.container);
+
+
 		this._el.content_container		= TL.Dom.create("div", "tl-slide-content-container", this._el.scroll_container);
 		this._el.content				= TL.Dom.create("div", "tl-slide-content", this._el.content_container);
+
 		this._el.background				= TL.Dom.create("div", "tl-slide-background", this._el.container);
 		// Style Slide Background
 		if (this.data.background) {
@@ -222,8 +226,6 @@ TL.Slide = TL.Class.extend({
 
 		}
 
-
-
 		// Determine Assets for layout and loading
 		if (this.data.media && this.data.media.url && this.data.media.url != "") {
 			this.has.media = true;
@@ -250,23 +252,32 @@ TL.Slide = TL.Class.extend({
 		// Create Text
 		if (this.has.text || this.has.headline) {
 			this._text = new TL.Media.Text(this.data.text, {title:this.has.title,language: this.options.language, autolink: this.data.autolink });
-			this._text.addDateText(this.getFormattedDate());
+			this._text.addDateText(this.getFormattedDate(), this.data.unique_id);
 		}
 
-
-
 		// Add to DOM
+		//Media only -- aways include date
 		if (!this.has.text && !this.has.headline && this.has.media) {
 			TL.DomUtil.addClass(this._el.container, 'tl-slide-media-only');
+			this._text = new TL.Media.Text(this.data.text, {title:this.has.title,language: this.options.language, autolink: this.data.autolink });
+			this._text.addDateText(this.getFormattedDate(), this.data.unique_id);
+			this._text.addTo(this._el.content);
 			this._media.addTo(this._el.content);
-		} else if (this.has.headline && this.has.media && !this.has.text) {
+			this.has.headline = true;
+		}
+		//headline and media -- no text
+		else if (this.has.headline && this.has.media && !this.has.text) {
 			TL.DomUtil.addClass(this._el.container, 'tl-slide-media-only');
 			this._text.addTo(this._el.content);
 			this._media.addTo(this._el.content);
-		} else if (this.has.text && this.has.media) {
-			this._media.addTo(this._el.content);
+		}
+		//text and media
+		else if (this.has.text && this.has.media) {
 			this._text.addTo(this._el.content);
-		} else if (this.has.text || this.has.headline) {
+			this._media.addTo(this._el.content);
+		}
+		//text or headline
+		else if (this.has.text || this.has.headline) {
 			TL.DomUtil.addClass(this._el.container, 'tl-slide-text-only');
 			this._text.addTo(this._el.content);
 		}

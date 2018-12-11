@@ -152,6 +152,7 @@ TL.Timeline = TL.Class.extend({
 		this.config = null;
 
 		this.options = {
+			title: "",
 			script_path: 				"",
 			height: 					this._el.container.offsetHeight,
 			width: 						this._el.container.offsetWidth,
@@ -231,8 +232,11 @@ TL.Timeline = TL.Class.extend({
 		if (this.options.is_full_embed) {
 			TL.DomUtil.addClass(this._el.container, 'tl-timeline-full-embed');
 		}
+		//Add aria-labelledby attribute
+		this._el.container.setAttribute('aria-labelledby', 'tl-heading');
 
 		document.addEventListener("keydown", function(event) {
+
 			var keyName = event.key;
 			var currentSlide = self._getSlideIndex(self.current_id);
 			var _n = self.config.events.length - 1;
@@ -242,14 +246,40 @@ TL.Timeline = TL.Class.extend({
 			if (keyName == 'ArrowLeft'){
 				if (currentSlide!=firstSlide){
 					self.goToPrev();
+					self._timenav._markers[(currentSlide-2)]._el.content_container.focus();
 				}
 			}
 			else if (keyName == 'ArrowRight'){
 				if (currentSlide!=lastSlide){
+					setTimeout(function() {
+						self._timenav._markers[currentSlide]._el.content_container.focus();
+					}, (self.options.duration/2));
+
 					self.goToNext();
+
+
 				}
 			}
 		});
+
+
+		document.addEventListener("keyup", function(event) {
+			var keyName = event.key;
+			var container = document.getElementsByClassName('tl-storyslider');
+			container[0].scrollLeft = 0;
+			if (keyName.toLowerCase() === 'tab') {
+				var thisTag = event.target;
+				self._adjustSlide(thisTag);
+			}
+		});
+
+		document.addEventListener("focus", function(event){
+			var thisTag = event.target;
+			var container = document.getElementsByClassName('tl-storyslider');
+			container[0].scrollLeft = 0;
+			self._adjustSlide(thisTag);
+		}, true);
+
 
 		// Use Relative Date Calculations
 		// NOT YET IMPLEMENTED
@@ -266,6 +296,16 @@ TL.Timeline = TL.Class.extend({
 			self._loadLanguage(data);
 		}
 
+	},
+	_adjustSlide:function(tag) {
+		while(tag.tagName.toLowerCase() !== 'body') {
+			if(TL.DomUtil.hasClass(tag, 'tl-slide')) {
+					var id = tag.getAttribute('id');
+					this.goToId(id, true);
+					break;
+			}
+			tag = tag.parentNode;
+		}
 	},
 	_translateError: function(e) {
 	    if(e.hasOwnProperty('stack')) {
@@ -294,11 +334,14 @@ TL.Timeline = TL.Class.extend({
 	================================================== */
 
 	// Goto slide with id
-	goToId: function(id) {
+	goToId: function(id, fast) {
+
+		fast = (typeof fast === 'undefined' ? false : true);
+
 		if (this.current_id != id) {
 			this.current_id = id;
 			this._timenav.goToId(this.current_id);
-			this._storyslider.goToId(this.current_id, false, true);
+			this._storyslider.goToId(this.current_id, fast, true);
 			this.fire("change", {unique_id: this.current_id}, this);
 		}
 	},
@@ -682,8 +725,14 @@ TL.Timeline = TL.Class.extend({
 	_initLayout: function () {
 		var self = this;
 
-        this.message.removeFrom(this._el.container);
+    this.message.removeFrom(this._el.container);
 		this._el.container.innerHTML = "";
+
+		//add a heading
+		this._el.heading = TL.Dom.create('h2', 'tl-heading visuallyhidden', this._el.container);
+		this._el.heading.setAttribute('id', 'tl-heading');
+
+		TL.Dom.createText((this.options.title === '' ? 'Timeline' : this.options.title), this._el.heading);
 
 		// Create Layout
 		if (this.options.timenav_position == "top") {
@@ -694,7 +743,9 @@ TL.Timeline = TL.Class.extend({
 			this._el.timenav		= TL.Dom.create('div', 'tl-timenav', this._el.container);
 		}
 
+		this._el.timenav.setAttribute('aria-hidden', 'true');
 		this._el.menubar			= TL.Dom.create('div', 'tl-menubar', this._el.container);
+		this._el.menubar.setAttribute('aria-hidden', 'true');
 
 
 		// Initial Default Layout
